@@ -30,7 +30,12 @@ class Window:
 
 def main():
     win = Window(800, 600)
-    win.draw_line(Line(point0=Point(5, 50), point1=Point(500, 500)), fill_color="red")
+    win.draw_line(
+        Line(point0=Point(100, 500), point1=Point(500, 100)), fill_color="red"
+    )
+    win.draw_line(
+        Line(point0=Point(100, 100), point1=Point(500, 500)), fill_color="red"
+    )
     win.wait_for_close()
 
 
