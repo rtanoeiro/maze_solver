@@ -1,21 +1,10 @@
-from window import Window
-from cell import Cell
+from graphics import Window
+from cell import Maze
 
 
 def main():
     win = Window(800, 600)
-    cell = Cell(
-        has_left_wall=True,
-        has_right_wall=True,
-        has_top_wall=True,
-        has_bottom_wall=False,
-        _x1=1,
-        _y1=1,
-        _x2=100,
-        _y2=100,
-        _win=win,
-    )
-    cell.draw()
+    Maze(x1=50, y1=50, num_rows=7, num_cols=5, cell_size_x=100, cell_size_y=100, win=win)
     win.wait_for_close()
 
 

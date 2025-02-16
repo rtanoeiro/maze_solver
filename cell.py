@@ -1,5 +1,5 @@
-from shapes import Line, Point
-from window import Window
+from graphics import Window, Point, Line
+import time
 
 
 class Cell:
@@ -29,17 +29,77 @@ class Cell:
 
     def draw(self):
         if self.has_left_wall:
-            line = Line(Point(x=self._x1, y=self._y1), Point(x=self._x1, y=self._y1))
+            line = Line(Point(x=self._x1, y=self._y1), Point(x=self._x1, y=self._y2))
             self._win.draw_line(line, fill_color="red")
 
         if self.has_right_wall:
-            line = Line(Point(x=self._x2, y=self._y1), Point(x=self._x2, y=self._y1 + self.height))
+            line = Line(Point(x=self._x2, y=self._y1), Point(x=self._x2, y=self._y2))
             self._win.draw_line(line, fill_color="red")
 
         if self.has_top_wall:
-            line = Line(Point(x=self._x1, y=self._y1), Point(x=self._x1 + self.width, y=self._y1))
+            line = Line(Point(x=self._x1, y=self._y1), Point(x=self._x2, y=self._y1))
             self._win.draw_line(line, fill_color="red")
 
         if self.has_bottom_wall:
-            line = Line(Point(x=self._x1, y=self._y2), Point(x=self._x1 + self.width, y=self._y2))
+            line = Line(Point(x=self._x1, y=self._y2), Point(x=self._x2, y=self._y2))
             self._win.draw_line(line, fill_color="red")
+
+    def draw_move(self, to_cell: "Cell", undo=False):
+        if undo:
+            color = "red"
+        else:
+            color = "gray"
+
+        starting_x, starting_y = self._x1 + self.width / 2, self._y1 + self.height / 2
+        ending_x, ending_y = to_cell._x1 + to_cell.width / 2, to_cell._y1 + to_cell.height / 2
+
+        line = Line(Point(starting_x, starting_y), Point(ending_x, ending_y))
+        self._win.draw_line(line, fill_color=color)
+
+
+class Maze:
+    def __init__(
+        self,
+        x1,
+        y1,
+        num_rows,
+        num_cols,
+        cell_size_x,
+        cell_size_y,
+        win,
+    ):
+        self.x1 = x1
+        self.y1 = y1
+        self.num_rows = num_rows
+        self.num_cols = num_cols
+        self.cell_size_x = cell_size_x
+        self.cell_size_y = cell_size_y
+        self.win = win
+        self.cells = []
+        self._create_cells()
+
+    def _create_cells(self):
+        for i in range(self.num_cols):
+            for j in range(self.num_rows):
+                cell = Cell(
+                    has_left_wall=True,
+                    has_right_wall=True,
+                    has_top_wall=True,
+                    has_bottom_wall=True,
+                    _x1=self.x1 + i * self.cell_size_x,
+                    _y1=self.y1 + j * self.cell_size_y,
+                    _x2=self.x1 + (i + 1) * self.cell_size_x,
+                    _y2=self.y1 + (j + 1) * self.cell_size_y,
+                    _win=self.win,
+                )
+                self.cells.append(cell)
+
+        for cell in self.cells:
+            self._draw_cell(cell)
+
+    def _draw_cell(self, cell: Cell):
+        cell.draw()
+        self._animate()
+
+    def _animate(self):
+        time.sleep(0.05)
