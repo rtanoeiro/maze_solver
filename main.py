@@ -8,7 +8,7 @@ def main():
         has_left_wall=True,
         has_right_wall=True,
         has_top_wall=True,
-        has_bottom_wall=True,
+        has_bottom_wall=False,
         _x1=1,
         _y1=1,
         _x2=100,
