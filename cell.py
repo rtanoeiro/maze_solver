@@ -29,25 +29,17 @@ class Cell:
 
     def draw(self):
         if self.has_left_wall:
-            pointt0 = Point(x=self._x1, y=self._y1)
-            pointt1 = Point(x=self._x1, y=self._y1 + self.height)
-            line = Line(point0=pointt0, point1=pointt1)
+            line = Line(Point(x=self._x1, y=self._y1), Point(x=self._x1, y=self._y1))
             self._win.draw_line(line, fill_color="red")
 
         if self.has_right_wall:
-            pointt0 = Point(x=self._x2, y=self._y1)
-            pointt1 = Point(x=self._x2, y=self._y1 + self.height)
-            line = Line(point0=pointt0, point1=pointt1)
+            line = Line(Point(x=self._x2, y=self._y1), Point(x=self._x2, y=self._y1 + self.height))
             self._win.draw_line(line, fill_color="red")
 
         if self.has_top_wall:
-            pointt0 = Point(x=self._x1, y=self._y1)
-            pointt1 = Point(x=self._x1 + self.width, y=self._y1)
-            line = Line(point0=pointt0, point1=pointt1)
+            line = Line(Point(x=self._x1, y=self._y1), Point(x=self._x1 + self.width, y=self._y1))
             self._win.draw_line(line, fill_color="red")
 
         if self.has_bottom_wall:
-            pointt0 = Point(x=self._x1, y=self._y2)
-            pointt1 = Point(x=self._x1 + self.width, y=self._y2)
-            line = Line(point0=pointt0, point1=pointt1)
+            line = Line(Point(x=self._x1, y=self._y2), Point(x=self._x1 + self.width, y=self._y2))
             self._win.draw_line(line, fill_color="red")
