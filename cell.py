@@ -1,5 +1,6 @@
 from graphics import Window, Point, Line
 import time
+from typing import Optional
 
 
 class Cell:
@@ -13,7 +14,7 @@ class Cell:
         _x2: int,
         _y1: int,
         _y2: int,
-        _win: Window,
+        _win: Optional[Window | None] = None,
     ):
         self.has_left_wall = has_left_wall
         self.has_right_wall = has_right_wall
@@ -66,7 +67,7 @@ class Maze:
         num_cols,
         cell_size_x,
         cell_size_y,
-        win,
+        win: Optional[Window | None] = None,
     ):
         self.x1 = x1
         self.y1 = y1
@@ -80,6 +81,7 @@ class Maze:
 
     def _create_cells(self):
         for i in range(self.num_cols):
+            col_cells = []
             for j in range(self.num_rows):
                 cell = Cell(
                     has_left_wall=True,
@@ -92,14 +94,17 @@ class Maze:
                     _y2=self.y1 + (j + 1) * self.cell_size_y,
                     _win=self.win,
                 )
-                self.cells.append(cell)
+                col_cells.append(cell)
+            self.cells.append(col_cells)
 
-        for cell in self.cells:
-            self._draw_cell(cell)
+        for i in range(self.num_cols):
+            for j in range(self.num_rows):
+                self._draw_cell(self.cells[i][j])
 
     def _draw_cell(self, cell: Cell):
-        cell.draw()
-        self._animate()
+        if self.win is not None:  # only draw if we have a window
+            cell.draw()
+            self._animate()
 
     def _animate(self):
-        time.sleep(0.05)
+        time.sleep(0.1)
