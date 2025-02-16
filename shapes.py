@@ -19,5 +19,5 @@ class Line:
             self.point1.x,
             self.point1.y,
             fill=fill_color,
-            width=2,
+            width=5,
         )
