@@ -60,7 +60,7 @@ class Cell:
 
     def draw_move(self, to_cell: "Cell", undo=False):
         if undo:
-            color = "red"
+            color = "white"
         else:
             color = "gray"
 
@@ -131,6 +131,12 @@ class Maze:
         self.win.redraw()
         time.sleep(0.04)
 
+    def _animate_slow(self):
+        if self.win is None:
+            return
+        self.win.redraw()
+        time.sleep(0.2)
+
     def _break_walls_r(self, i, j):
         while True:
             self.cells[i][j].visited = True
@@ -179,3 +185,64 @@ class Maze:
 
     def _remove_visited_attribute(self, cell: Cell):
         cell.visited = False
+
+    def solve(self):
+        self._solve_r(0, 0)
+
+    def _solve_r(self, i, j):
+        self._animate_slow()
+        self.cells[i][j].visited = True
+
+        if i == self.num_rows - 1 and j == self.num_cols - 1:
+            return True
+
+        for direction in DIRECTION.keys():
+            print(f"Checking direction {direction} on cell {i}{j}")
+            if self._can_move(i, j, direction):
+                print(
+                    f"Can move, moving from {i}{j} to {i + DIRECTION[direction][0]}{j + DIRECTION[direction][1]}"
+                )
+                self.cells[i][j].draw_move(
+                    to_cell=self.cells[i + DIRECTION[direction][0]][j + DIRECTION[direction][1]]
+                )
+                results = self._solve_r(i + DIRECTION[direction][0], j + DIRECTION[direction][1])
+                if results:
+                    return True
+                self.cells[i][j].draw_move(
+                    to_cell=self.cells[i + DIRECTION[direction][0]][j + DIRECTION[direction][1]],
+                    undo=True,
+                )
+        return False
+
+    def _can_move(self, i, j, direction):
+        if (
+            (direction == "up")
+            and ((i - 1) >= 0)
+            and (not self.cells[i][j].has_top_wall)
+            and (not self.cells[i - 1][j].visited)
+        ):
+            return True
+
+        if (
+            direction == "down"
+            and (i + 1 < self.num_rows)
+            and (not self.cells[i][j].has_bottom_wall)
+            and (not self.cells[i + 1][j].visited)
+        ):
+            return True
+
+        if (
+            direction == "left"
+            and (j - 1 >= 0)
+            and (not self.cells[i][j].has_left_wall)
+            and (not self.cells[i][j - 1].visited)
+        ):
+            return True
+
+        if (
+            direction == "right"
+            and (j + 1 < self.num_cols)
+            and (not self.cells[i][j].has_right_wall)
+            and (not self.cells[i][j + 1].visited)
+        ):
+            return True
