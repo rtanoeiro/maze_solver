@@ -1,6 +1,7 @@
 from graphics import Window, Point, Line
 from typing import Optional
 import random
+import time
 
 DIRECTION = {
     "up": (-1, 0),
@@ -96,8 +97,8 @@ class Maze:
 
         for i in range(self.num_rows):
             for j in range(self.num_cols):
-                self._draw_cell(self.cells[i][j], i=i, j=j)
-
+                self._draw_cell(self.cells[i][j])
+                self._remove_visited_attribute(self.cells[i][j])
         if seed:
             self.seed = random.seed(seed)
 
@@ -119,9 +120,16 @@ class Maze:
                 col_cells.append(cell)
             self.cells.append(col_cells)
 
-    def _draw_cell(self, cell: Cell, i, j):
+    def _draw_cell(self, cell: Cell):
         if self.win is not None:  # only draw if we have a window
             cell.draw()
+            self._animate()
+
+    def _animate(self):
+        if self.win is None:
+            return
+        self.win.redraw()
+        time.sleep(0.04)
 
     def _break_walls_r(self, i, j):
         while True:
@@ -168,3 +176,6 @@ class Maze:
     def _break_entrance_exit(self):
         self.cells[0][0].has_top_wall = False
         self.cells[self.num_rows - 1][self.num_cols - 1].has_bottom_wall = False
+
+    def _remove_visited_attribute(self, cell: Cell):
+        cell.visited = False

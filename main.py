@@ -3,8 +3,8 @@ from cell import Maze
 
 
 def main():
-    win = Window(800, 600)
-    Maze(x1=50, y1=50, num_rows=7, num_cols=5, cell_size_x=100, cell_size_y=100, win=win)
+    win = Window(1600, 1000)
+    Maze(x1=50, y1=50, num_rows=16, num_cols=22, cell_size_x=50, cell_size_y=50, win=win)
     win.wait_for_close()
 
 
